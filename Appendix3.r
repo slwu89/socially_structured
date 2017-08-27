@@ -262,7 +262,7 @@ for (i in 1:Population){
 			OtherHouses[i,] = OtherHouse
 	}
 }
-		
+
 SocialLocations=array(0,dim=c(length(Socials[,1]),LargestSocial,2))
 for (i in 1:length(Socials[,1])){
 	SocialLocations[i,,1]=floor((Socials[i,]-1)/CityLength)+1
@@ -397,7 +397,7 @@ PercentInfectedNow=0
 PercentInfectedBefore=0
 PercentInfected=0
 PercentTreshold=1
-newSample=rep(-1,19*3)	
+newSample=rep(-1,19*3)
 for (Day in 1:TotalDays){
 	### The Day
 	for (Hour in 1:DayLength){
@@ -465,9 +465,9 @@ for (Day in 1:TotalDays){
 				newSample[19+PercentTreshold-1]=sum(YesList)/length(YesList)
 			}
 			newSample[19*2+PercentTreshold-1]=t
-		}			
+		}
 		TranChance=sum(NodeStatus[,t:length(NodeStatus[1,])])
-		if (t<TotalTime&length(which(InfectionInfo[,4]<3))>0&(TranChance>0|length(which(InfectionInfo[,4]==1|InfectionInfo[,4]==2))>0)){	
+		if (t<TotalTime&length(which(InfectionInfo[,4]<3))>0&(TranChance>0|length(which(InfectionInfo[,4]==1|InfectionInfo[,4]==2))>0)){
 			### Host E->I
 			Infected=which(InfectionInfo[,4]==1)
 			for (i in Infected){
@@ -542,7 +542,7 @@ for (Day in 1:TotalDays){
 	}
 }
 
-	
+
 Days=matrix(1:TotalTime,TotalTime/12,12,byrow=T)
 TotalInfection=rep(0,TotalTime/12)
 for (t in 1:(TotalTime/12)){
