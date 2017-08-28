@@ -113,15 +113,18 @@ out = simpleHuman(maxSteps = 50,N=12)
 plotOneHuman(out = out,lwd = 15,cols = cols)
 par(mfrow=c(1,1))
 
-
+# pmax(0,(b+cos(2*pi*(t-o*60)/24/60)))^p 
 
 
 t=seq(from=0,to=24*60,by=0.1)
 
+hourGrain = 120
+xHours = which(t %% hourGrain == 0)
 plot({
   (sin((2*pi*t)/1440)*0.5 + 1)
-},type="l",ylim=c(0,2),ylab="Relative Activity Levels",xlab="Time of Day")
+},type="l",ylim=c(0,2),ylab="Relative Activity Levels",xlab="Time of Day",main="Mosquito Diurnal Forcing",xaxt="n")
 abline(h = 1,lty = 2)
+axis(side = 1,at = xHours,labels = paste0(t[xHours]/60,":00"))
 
 plot({
   ((sin((2*pi*t)/1440) + cos((2*pi*t)/1440)) ) + 1.5
