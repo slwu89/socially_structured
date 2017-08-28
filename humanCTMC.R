@@ -116,11 +116,22 @@ par(mfrow=c(1,1))
 
 
 
-t=seq(from=0,to=24*60,by=0.01)
-plot(sin((2*pi*t)/1440),type="l")
+t=seq(from=0,to=24*60,by=0.1)
+
 plot({
-    sin((2*pi*t)/1440) + cos((2*pi*t)/1440)
-  },type = "l")
+  (sin((2*pi*t)/1440)*0.5 + 1)
+},type="l",ylim=c(0,2),ylab="Relative Activity Levels",xlab="Time of Day")
+abline(h = 1,lty = 2)
+
+plot({
+  ((sin((2*pi*t)/1440) + cos((2*pi*t)/1440)) ) + 1.5
+},type = "l",ylab = "Amplitude")
+abline(h = 1,lty=2)
+
+plot({
+    ((sin((2*pi*t)/1440) + cos((2*pi*t)/1440)) * 0.5)
+  },type = "l",ylab = "Amplitude")
+abline(h = 0,lty=2)
 
 hazFunc = function(t){
   sin((2*pi*t)/1440) + cos((2*pi*t)/1440)
@@ -128,18 +139,3 @@ hazFunc = function(t){
 
 out = sin((2*pi*t)/1440) + cos((2*pi*t)/1440)
 integrate(f = hazFunc,lower = 0,upper = 1440,subdivisions = 1e3)
-
-
-
-
-hazardFunction <- function(t,sinK,cosK,pow=1){
-  sin((sinK*pi*t)/1440) + cos((cosK*pi*t)/1440)
-}
-
-tseq = 0:(60*24)
-
-plotHazard <- function(sinK,cosK,pow=1){
-  plot(x = tseq,y = hazardFunction(tseq,sinK,cosK,pow),type="l",xlab="Time of Day",ylab="Hazard")
-}
-plotHazard(sinK = 2,cosK = 2)
-
