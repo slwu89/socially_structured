@@ -118,6 +118,7 @@ par(mfrow=c(1,1))
 
 t=seq(from=0,to=24*60,by=0.1)
 
+# Diurnal forcing of activity levels
 hourGrain = 120
 xHours = which(t %% hourGrain == 0)
 plot({
@@ -126,19 +127,51 @@ plot({
 abline(h = 1,lty = 2)
 axis(side = 1,at = xHours,labels = paste0(t[xHours]/60,":00"))
 
-plot({
-  ((sin((2*pi*t)/1440) + cos((2*pi*t)/1440)) ) + 1.5
-},type = "l",ylab = "Amplitude")
-abline(h = 1,lty=2)
 
-plot({
-    ((sin((2*pi*t)/1440) + cos((2*pi*t)/1440)) * 0.5)
-  },type = "l",ylab = "Amplitude")
-abline(h = 0,lty=2)
-
-hazFunc = function(t){
-  sin((2*pi*t)/1440) + cos((2*pi*t)/1440)
+# functions for activity
+sinHaz <- function(tNow){
+  return(sin((2*pi*tNow)/1440)*0.5 + 1)
 }
 
-out = sin((2*pi*t)/1440) + cos((2*pi*t)/1440)
-integrate(f = hazFunc,lower = 0,upper = 1440,subdivisions = 1e3)
+sinCumHaz <- function(){
+  t=seq(from=0,to=24*60,by=0.1)
+  cumHaz = cumsum(sinHaz(t = t))
+  2*cumHaz/max(cumHaz)
+}
+
+
+# generate CDF of relative activity
+# cch = P*(cumCosHaz(o,b,p)[ixx] - cumCosHaz(o,b,p)[t0]) 
+# x = d2Min[ixx]/60
+# y = cch
+
+
+# Diurnal forcing of activity levels with offset (given in hours)
+offset = 2
+hourGrain = 120
+xHours = which(t %% hourGrain == 0)
+plot({
+  (sin((2*pi*(t-offset*60))/1440)*0.5 + sin((2*pi*t-(offset+12)*60)/1440)*0.5 + 1)
+},type="l",ylim=c(0,2),ylab="Relative Activity Levels",xlab="Time of Day",main="Mosquito Diurnal Forcing",xaxt="n")
+abline(h = 1,lty = 2)
+axis(side = 1,at = xHours,labels = paste0(t[xHours]/60,":00"))
+
+
+
+
+# plot({
+#   ((sin((2*pi*t)/1440) + cos((2*pi*t)/1440)) ) + 1.5
+# },type = "l",ylab = "Amplitude")
+# abline(h = 1,lty=2)
+# 
+# plot({
+#     ((sin((2*pi*t)/1440) + cos((2*pi*t)/1440)) * 0.5)
+#   },type = "l",ylab = "Amplitude")
+# abline(h = 0,lty=2)
+# 
+# hazFunc = function(t){
+#   sin((2*pi*t)/1440) + cos((2*pi*t)/1440)
+# }
+# 
+# out = sin((2*pi*t)/1440) + cos((2*pi*t)/1440)
+# integrate(f = hazFunc,lower = 0,upper = 1440,subdivisions = 1e3)
