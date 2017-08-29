@@ -10,11 +10,11 @@ simpleHuman <- function(maxSteps=1e3, N=1){
   states = vector(mode = "character",length = maxSteps+1)
   times = vector(mode = "numeric",length = maxSteps+1)
   duration = vector(mode = "numeric",length = maxSteps+1)
-  
+
   times[1] = 0
   states[1] = "H"
   duration[1] = rexp(n = 1,rate = homeTime)
-  
+
   for(i in 1:maxSteps){
     print(paste0("iteration: ",i))
     switch(EXPR = states[i],
@@ -52,7 +52,7 @@ simpleHuman <- function(maxSteps=1e3, N=1){
 plotOneHuman <- function(out,lwd,cols){
   xlim = c(0,max(out$times)+1)
   ylim = c(0,0.375)
-  
+
   plot(1,type="n",xaxt="n",yaxt="n",ylab="State Occupancy",xlab="Time (Days)",xlim=xlim,ylim=ylim,main="One Human (Assume Simulation begins at 20:00)\n Daily 20:00 in Red, Daily 08:00 in Blue")
   ttMax = max(out$times)/24
   axis(side = 1,at = (0:ttMax)*24,labels = 0:ttMax)
@@ -92,7 +92,7 @@ plotOneHuman <- function(out,lwd,cols){
       )
     }
   }
-  
+
 }
 
 cols = c("blue","grey50","purple","grey20")

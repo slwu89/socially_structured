@@ -16,7 +16,7 @@ axis(side = 1,at = xHours,labels = paste0(t[xHours]/60,":00"))
 # t: tNow
 # o: offset (in hours)
 hazFunc <- function(t,o=-2){
-  (sin((2*pi*(t-o*60))/1440)*0.5 + 1)
+  (sin((2*pi*(t-o*60))/1440)*0.75 + 1)
 }
 hazCurve = hazFunc(t = t,o = 0)
 plot(hazCurve,type="l",ylim=c(0,2),ylab="Relative Activity Levels",xlab="Time of Day",main="Mosquito Diurnal Forcing",xaxt="n")
@@ -38,7 +38,6 @@ simpleMosquito <- function(o=0){
   
   times[[1]] = 0
   states[[1]] = "B"
-  duration[[1]] = rexp(n = 1,rate = Btime)
   
   i = 2
   while(states[[i-1]]!="D"){
@@ -52,8 +51,8 @@ simpleMosquito <- function(o=0){
              force = hazFunc(t=tNow,o = o)
              
              # duration of time until next event
-             tDur = rexp(n = 1,rate = Btime/force)
-             duration[[i]] = tDur
+             tDur = rexp(n = 1,rate = Btime*force)
+             duration[[i-1]] = tDur
              
              # time of next event
              times[[i]] = times[[i-1]] + tDur
@@ -74,8 +73,8 @@ simpleMosquito <- function(o=0){
              force = hazFunc(t=tNow,o = o)
              
              # duration of time until next event
-             tDur = rexp(n = 1,rate = Rtime/force)
-             duration[[i]] = tDur
+             tDur = rexp(n = 1,rate = Rtime*force)
+             duration[[i-1]] = tDur
              
              # time of next event
              times[[i]] = times[[i-1]] + tDur
@@ -96,8 +95,8 @@ simpleMosquito <- function(o=0){
              force = hazFunc(t=tNow,o = o)
              
              # duration of time until next event
-             tDur = rexp(n = 1,rate = Otime/force)
-             duration[[i]] = tDur
+             tDur = rexp(n = 1,rate = Otime*force)
+             duration[[i-1]] = tDur
              
              # time of next event
              times[[i]] = times[[i-1]] + tDur
@@ -125,22 +124,47 @@ simpleMosquito <- function(o=0){
 
 
 mosyOut = simpleMosquito()
+plotMosyOut(mosyOut)
 
-out = mosyOut
+
 plotMosyOut = function(out,o=0){
   
   tMax = ceiling(max(out$times))
   tSeq = seq(from=0,to=tMax*24*60,by=0.1)
   
-  # plot the diurnal forcing used
-  hourGrain = 120
-  xHours = which(tSeq %% hourGrain == 0)
-  hazCurve = hazFunc(t = tSeq,o = 0)
-  plot(hazCurve,type="l",ylim=c(0,2),ylab="Relative Activity Levels",xlab="Time of Day",main="Mosquito Diurnal Forcing",xaxt="n")
-  abline(h = 1,lty = 2)
-  # fix so that it prints just hours, not cumulative hours
-  # axis(side = 1,at = xHours,labels = paste0(tSeq[xHours]/60,":00"))
+  daySeq = vapply(X = 0:(tMax-1),FUN = function(x){x*24*60},FUN.VALUE = numeric(1),USE.NAMES = FALSE)
   
+  # plot the diurnal forcing used
+  hourGrain = 60*12
+  xHours = which(tSeq %% hourGrain == 0)
+  hazCurve = hazFunc(t = tSeq,o = o)
+  plot(x=tSeq,y=hazCurve,type="l",ylim=c(0,2),ylab="Relative Activity Levels",xlab="Time of Day",main="Mosquito Diurnal Forcing",xaxt="n")
+  abline(h = 1,lty = 2)
+  hourLabel = (tSeq[xHours]/60) %% 24
+  dayLabel = paste0("Day",0:(tMax-1))
+  axis(side = 1,at = tSeq[xHours],labels = paste0(hourLabel,":00"))
+  text(x = daySeq,y=0.01,labels = dayLabel)
+  
+  # plot the mosquito time series
+  pointsX = out$times*24*60
+  pointsY = hazFunc(t = pointsX,o = 0)
+  pointsType = vapply(X = out$states,FUN = function(x){
+      switch(x,
+             B = 15,
+             R = 16,
+             O = 17,
+             D = 18
+       )
+    },FUN.VALUE = numeric(1),USE.NAMES = FALSE)
+  pointsCol = vapply(X = out$states,FUN = function(x){
+    switch(x,
+           B = "red",
+           R = "blue",
+           O = "purple",
+           D = "darkgreen"
+    )
+  },FUN.VALUE = character(1),USE.NAMES = FALSE)
+  points(pointsX,pointsY,pch=pointsType,col=pointsCol,cex=1.05)
 }
 
 
