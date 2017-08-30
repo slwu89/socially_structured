@@ -27,9 +27,9 @@ axis(side = 1,at = xHours,labels = paste0(t[xHours]/60,":00"))
 #   return(rep(1,length=length(t)))
 # }
 
-Btime = 1/24
-Rtime = 1/24
-Otime = 1/24
+Btime = 1/1
+Rtime = 1/1
+Otime = 1/1
 g = 1/10
 
 exponentialMosquito <- function(o=0){
