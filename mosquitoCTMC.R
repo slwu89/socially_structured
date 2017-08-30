@@ -23,11 +23,13 @@ plot(hazCurve,type="l",ylim=c(0,2),ylab="Relative Activity Levels",xlab="Time of
 abline(h = 1,lty = 2)
 axis(side = 1,at = xHours,labels = paste0(t[xHours]/60,":00"))
 
+# hazFunc = function(t,o){
+#   return(rep(1,length=length(t)))
+# }
 
-
-Btime = 1/1
-Rtime = 1/1
-Otime = 1/1
+Btime = 1/24
+Rtime = 1/24
+Otime = 1/24
 g = 1/10
 
 exponentialMosquito <- function(o=0){
@@ -171,10 +173,17 @@ plotMosyOut = function(out,o=0){
 
 cohort = parallel::mclapply(X = 1:100,FUN = function(x,o){exponentialMosquito(o=o)},o=0)
 
+
+
 avgLife = vapply(X = cohort,FUN = function(x){
   tail(x$times,1)
 },FUN.VALUE = numeric(1),USE.NAMES = FALSE)
-avgLife = mean(avgLife)
+avgLife = mean(avgLife); avgLife
+
+ptsX = unlist(lapply(X = cohort,FUN = function(x){x$times}))
+ptsY = hazFunc(t = ptsX*60*24,o = 0)
+sum(ptsY>=1) / length(ptsY)
+sum(ptsY<1) / length(ptsY)
 
 plotMosyPopOut = function(cohort,o=0){
   
