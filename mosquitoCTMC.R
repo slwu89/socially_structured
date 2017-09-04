@@ -62,7 +62,8 @@ gammaMosquito <- function(N=5,alpha=1,off=0){
              times[[i]] = times[[i-1]] + tDur
              
              # choose next event
-             pDie = g*tDur
+             pDie = pgamma(q = tDur,shape = N,rate = g*N)
+             # pDie = 1-exp(-g*tDur)
              if(runif(1) < pDie){
                states[[i]] = "D"
              } else {
@@ -83,7 +84,8 @@ gammaMosquito <- function(N=5,alpha=1,off=0){
              times[[i]] = times[[i-1]] + tDur
              
              # choose next event
-             pDie = g*tDur
+             pDie = pgamma(q = tDur,shape = N,rate = g*N)
+             # pDie = 1-exp(-g*tDur)
              if(runif(1) < pDie){
                states[[i]] = "D"
              } else {
@@ -94,7 +96,7 @@ gammaMosquito <- function(N=5,alpha=1,off=0){
            O = {
              
              # diurnal forcing
-             tNow = (times[[i-1]] %% 1)
+             tNow = (times[[i-1]] %% 1)                                                                                                                                                                
              
              # duration of time until next event
              tDur = rgamma(n = 1,shape = N,rate = sinRate(t = tNow,alpha = alpha,lambda = Otime,off = off)*N)
@@ -104,7 +106,8 @@ gammaMosquito <- function(N=5,alpha=1,off=0){
              times[[i]] = times[[i-1]] + tDur
              
              # choose next event
-             pDie = g*tDur
+             # pDie = 1-exp(-g*tDur)
+             pDie = pgamma(q = tDur,shape = N,rate = g*N)
              if(runif(1) < pDie){
                states[[i]] = "D"
              } else {
@@ -124,13 +127,23 @@ gammaMosquito <- function(N=5,alpha=1,off=0){
   ))
 }
 
+
 Btime = 1/(1/3)
 Rtime = 1/(1/3)
 Otime = 1/(1/3)
 g = 1/12
 
-mosyOut = gammaMosquito(N = 16,alpha = 1,off = 0)
+mosyOut = gammaMosquito(N = 1,alpha = 1,off = 0)
 plotMosyOut(mosyOut)
+
+cohort = parallel::mclapply(X = 1:100,FUN = function(x){gammaMosquito(N=512,alpha=1)})
+
+
+
+avgLife = vapply(X = cohort,FUN = function(x){
+  tail(x$times,1)
+},FUN.VALUE = numeric(1),USE.NAMES = FALSE)
+avgLife = mean(avgLife); avgLife
 
 
 
