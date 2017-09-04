@@ -1,5 +1,149 @@
 rm(list=ls());gc()
-# pmax(0,(b+cos(2*pi*(t-o*60)/24/60)))^p 
+
+
+# follows notation from "Mt/G/inf Queues with Sinuoidal Arrival Rates (Eick, Massey, Whitt 1993)
+# parameterized in days (hence psi=1 as denominator in sin curve)
+sinRate <- function(t,alpha,lambda,off=0){
+  if(abs(alpha)>1){stop("alpha parameter must be |alpha| <= 1")}
+  lambda + lambda*alpha*sin((2*pi*t-(off/24))/1)
+}
+
+oneDay = seq(from=0,to=1,by=0.01)
+
+lambdaMean = 1/3
+sinCurve = sinRate(t=oneDay,alpha = 1,lambda = lambdaMean,off = 0)
+
+plot({
+  sinCurve
+},type="l",xaxt="n",xlab = "Time of Day",ylab = "Sinusoidal Rate",main = "Periodic Transition Rate")
+abline(h = lambdaMean,lty = 2,col="red")
+abline(v = which.max(sinCurve),col = "purple")
+text(x = which.max(sinCurve),y = lambdaMean+0.1,labels = paste0("max at ",oneDay[which.max(sinCurve)]*24),pos = 2,col="purple")
+text(x = which.max(sinCurve),y = max(sinCurve),labels = paste0("max ",round(max(sinCurve),5)),pos = 1, col = "purple")
+abline(v = which.min(sinCurve),col = "purple")
+text(x = which.min(sinCurve),y = lambdaMean-0.1,labels = paste0("min at ",oneDay[which.min(sinCurve)]*24),pos = 2,col="purple")
+text(x = which.min(sinCurve),y = min(sinCurve),labels = paste0("min ",round(min(sinCurve),5)),pos = 3, col = "purple")
+
+inflexPts = rle(sign(diff(diff(sinCurve))))$lengths
+for(i in 2:length(inflexPts)){
+  pt = mean(rle(sign(diff(diff(sinCurve))))$lengths[i-1] + 1)
+  abline(v = pt,col = "blue")
+  text(x = pt,y = lambdaMean,pos = 1,col = "blue",labels = paste0("inflection point at ",oneDay[rle(sign(diff(diff(sinCurve))))$lengths[i-1]]))
+}
+
+axis(side = 1,at = which(oneDay%%0.1==0) ,labels = oneDay[oneDay%%0.1==0] * 24)
+
+
+# gammaMosquito: a mosquito whose time-to-event (waiting time) distributions follow the Gamma(N,rate) distribution to reduce variance
+gammaMosquito <- function(N=5,alpha=1,off=0){
+  
+  states = vector(mode = "list",length = 100)
+  times = vector(mode = "list",length = 100)
+  duration = vector(mode = "list",length = 100)
+  
+  times[[1]] = 0
+  states[[1]] = "B"
+  
+  i = 2
+  while(states[[i-1]]!="D"){
+    
+    print(paste0("iteration: ",i, " tNow: ",times[[i-1]]))
+    switch(EXPR = states[[i-1]],
+           B = {
+             
+             # diurnal forcing
+             tNow = (times[[i-1]] %% 1)
+             
+             # duration of time until next event
+             tDur = rgamma(n = 1,shape = N,rate = sinRate(t = tNow,alpha = alpha,lambda = Btime,off = off)*N)
+             duration[[i-1]] = tDur
+             
+             # time of next event
+             times[[i]] = times[[i-1]] + tDur
+             
+             # choose next event
+             pDie = g*tDur
+             if(runif(1) < pDie){
+               states[[i]] = "D"
+             } else {
+               states[[i]] = "R"
+             }
+             
+           },
+           R = {
+             
+             # diurnal forcing
+             tNow = (times[[i-1]] %% 1)
+             
+             # duration of time until next event
+             tDur = rgamma(n = 1,shape = N,rate = sinRate(t = tNow,alpha = alpha,lambda = Rtime,off = off)*N)
+             duration[[i-1]] = tDur
+             
+             # time of next event
+             times[[i]] = times[[i-1]] + tDur
+             
+             # choose next event
+             pDie = g*tDur
+             if(runif(1) < pDie){
+               states[[i]] = "D"
+             } else {
+               states[[i]] = "O"
+             }
+             
+           },
+           O = {
+             
+             # diurnal forcing
+             tNow = (times[[i-1]] %% 1)
+             
+             # duration of time until next event
+             tDur = rgamma(n = 1,shape = N,rate = sinRate(t = tNow,alpha = alpha,lambda = Otime,off = off)*N)
+             duration[[i-1]] = tDur
+             
+             # time of next event
+             times[[i]] = times[[i-1]] + tDur
+             
+             # choose next event
+             pDie = g*tDur
+             if(runif(1) < pDie){
+               states[[i]] = "D"
+             } else {
+               states[[i]] = "B"
+             }
+             
+           },
+           {stop(paste0("unrecognized state",states[[i-1]]))}
+    )
+    
+    i = i+1
+  }
+  return(list(
+    states=unlist(Filter(Negate(is.null),states)),
+    times=unlist(Filter(Negate(is.null),times)),
+    duration=unlist(Filter(Negate(is.null),duration))
+  ))
+}
+
+Btime = 1/(1/3)
+Rtime = 1/(1/3)
+Otime = 1/(1/3)
+g = 1/12
+
+mosyOut = gammaMosquito(N = 16,alpha = 1,off = 0)
+plotMosyOut(mosyOut)
+
+
+
+
+###############################################################################
+# Old Hazard Forcing
+###############################################################################
+
+
+
+
+
+
 
 
 t=seq(from=0,to=24*60,by=0.01)
@@ -23,9 +167,6 @@ plot(hazCurve,type="l",ylim=c(0,2),ylab="Relative Activity Levels",xlab="Time of
 abline(h = 1,lty = 2)
 axis(side = 1,at = xHours,labels = paste0(t[xHours]/60,":00"))
 
-# hazFunc = function(t,o){
-#   return(rep(1,length=length(t)))
-# }
 
 Btime = 1/1
 Rtime = 1/1
