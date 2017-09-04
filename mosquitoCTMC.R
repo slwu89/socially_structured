@@ -63,7 +63,6 @@ gammaMosquito <- function(N=5,alpha=1,off=0){
 
              # choose next event
              pDie = pgamma(q = tDur,shape = N,rate = g*N)
-             # pDie = 1-exp(-g*tDur)
              if(runif(1) < pDie){
                states[[i]] = "D"
              } else {
@@ -85,7 +84,6 @@ gammaMosquito <- function(N=5,alpha=1,off=0){
 
              # choose next event
              pDie = pgamma(q = tDur,shape = N,rate = g*N)
-             # pDie = 1-exp(-g*tDur)
              if(runif(1) < pDie){
                states[[i]] = "D"
              } else {
@@ -106,7 +104,6 @@ gammaMosquito <- function(N=5,alpha=1,off=0){
              times[[i]] = times[[i-1]] + tDur
 
              # choose next event
-             # pDie = 1-exp(-g*tDur)
              pDie = pgamma(q = tDur,shape = N,rate = g*N)
              if(runif(1) < pDie){
                states[[i]] = "D"
@@ -128,22 +125,23 @@ gammaMosquito <- function(N=5,alpha=1,off=0){
 }
 
 
-Btime = 1/(1/3)
-Rtime = 1/(1/3)
-Otime = 1/(1/3)
-g = 1/12
+Btime = 1/1
+Rtime = 1/1
+Otime = 1/1
+g = 1/2.5
 
 mosyOut = gammaMosquito(N = 1,alpha = 1,off = 0)
 plotMosyOut(mosyOut)
 
-cohort = parallel::mclapply(X = 1:100,FUN = function(x){gammaMosquito(N=512,alpha=1)})
+cohort = parallel::mclapply(X = 1:1e3,FUN = function(x){gammaMosquito(N=512,alpha=1)})
 
 
 
 avgLife = vapply(X = cohort,FUN = function(x){
   tail(x$times,1)
 },FUN.VALUE = numeric(1),USE.NAMES = FALSE)
-avgLife = mean(avgLife); avgLife
+mean(avgLife)
+median(avgLife)
 
 
 
@@ -344,7 +342,7 @@ plotMosyOut = function(out,Btime,Rtime,Otime,scaling=0.25,o=0){
 }
 
 
-cohort = parallel::mclapply(X = 1:100,FUN = function(x,o){exponentialMosquito(o=o)},o=0)
+cohort = parallel::mclapply(X = 1:1e4,FUN = function(x,o){exponentialMosquito(o=o)},o=0)
 
 
 
