@@ -63,8 +63,8 @@ gammaMosquito <- function(N=5,alpha=1,off=0){
 
              # choose next event
              # pDie = pgamma(q = tDur,shape = N,rate = g*N)
-             # pexp(q = tDur, rate = -log(1-g)) # if i was exponentially distributed...
-             # pgamma(q = tDur, shape = N, rate = (-log(1-g))*N) # ... but i'm a gamma
+             # pDie = pexp(q = tDur, rate = -log(1-g)) # if i was exponentially distributed...
+             # pDie = pgamma(q = tDur, shape = N, rate = (-log(1-g))*N) # ... but i'm a gamma
              pDie = g*tDur
              if(runif(1) < pDie){
                states[[i]] = "D"
@@ -87,8 +87,8 @@ gammaMosquito <- function(N=5,alpha=1,off=0){
 
              # choose next event
              # pDie = pgamma(q = tDur,shape = N,rate = g*N)
-             # pexp(1 = tDur, rate = -log(1-g)) # if i was exponentially distributed...
-             # pgamma(q = tDur, shape = N, rate = (-log(1-g))*N) # ... but i'm a gamma
+             # pDie = pexp(q = tDur, rate = -log(1-g)) # if i was exponentially distributed...
+             # pDie = pgamma(q = tDur, shape = N, rate = (-log(1-g))*N) # ... but i'm a gamma
              pDie = g*tDur
              if(runif(1) < pDie){
                states[[i]] = "D"
@@ -111,8 +111,8 @@ gammaMosquito <- function(N=5,alpha=1,off=0){
 
              # choose next event
              # pDie = pgamma(q = tDur,shape = N,rate = g*N)
-             # pexp(1 = tDur, rate = -log(1-g)) # if i was exponentially distributed...
-             # pgamma(q = tDur, shape = N, rate = (-log(1-g))*N) # ... but i'm a gamma
+             # pDie = pexp(q = tDur, rate = -log(1-g)) # if i was exponentially distributed...
+             # pDie = pgamma(q = tDur, shape = N, rate = (-log(1-g))*N) # ... but i'm a gamma
              pDie = g*tDur
              if(runif(1) < pDie){
                states[[i]] = "D"
@@ -153,7 +153,20 @@ mean(avgLife)
 median(avgLife)
 
 
-
+# solveGamma <- function(p,shape,rate){
+#   1 - exp(-integrate(f = function(s){
+#     dgamma(x = s,shape = shape,rate = rate) / 1 - pgamma(q = s,shape = shape,rate = rate)
+#   },lower = 0,upper = 1)) - p
+# }
+# 
+# 1 - exp(-integrate(f = function(s,shape,rate){
+#   dgamma(x = s,shape = shape,rate = rate) / 1 - pgamma(q = s,shape = shape,rate = rate)
+# },lower = 0,upper = 1,shape=shape,rate=rate))
+# 
+# 
+# 1 - exp(-integrate(f = function(s,rate){
+#   dexp(x = s,rate = rate) / 1 - pexp(q = s,rate = rate)
+# },lower = 0,upper = 1,rate=rate)$value)
 
 ###############################################################################
 # Old Hazard Forcing
