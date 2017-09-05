@@ -34,9 +34,16 @@ xx = semiMarkovOrganism(N = 1,waitTime = waitTime,lifespan = lifespan)
 
 yy= parallel::mclapply(X = 1:1e4,FUN = function(x,N,waitTime,lifespan){
   semiMarkovOrganism(N = N,waitTime = waitTime,lifespan = lifespan)
-},N=500,waitTime=waitTime,lifespan=lifespan)
+},N=1,waitTime=waitTime,lifespan=lifespan)
 
 life = unlist(lapply(X = yy,FUN = function(x){tail(x$times,1)}))
 
 mean(life)
 median(life)
+var(life)
+
+dwell = unlist(lapply(X = yy,FUN = function(x){x$duration}))
+
+mean(dwell)
+median(dwell)
+var(dwell)
