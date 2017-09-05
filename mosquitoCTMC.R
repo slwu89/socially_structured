@@ -19,10 +19,10 @@ plot({
 abline(h = lambdaMean,lty = 2,col="red")
 abline(v = which.max(sinCurve),col = "purple")
 text(x = which.max(sinCurve),y = lambdaMean+0.1,labels = paste0("max at ",oneDay[which.max(sinCurve)]*24),pos = 2,col="purple")
-text(x = which.max(sinCurve),y = max(sinCurve),labels = paste0("max ",round(max(sinCurve),5)),pos = 1, col = "purple")
+text(x = which.max(sinCurve),y = max(sinCurve),labels = paste0("max rate ",round(max(sinCurve),5)),pos = 1, col = "purple")
 abline(v = which.min(sinCurve),col = "purple")
 text(x = which.min(sinCurve),y = lambdaMean-0.1,labels = paste0("min at ",oneDay[which.min(sinCurve)]*24),pos = 2,col="purple")
-text(x = which.min(sinCurve),y = min(sinCurve),labels = paste0("min ",round(min(sinCurve),5)),pos = 3, col = "purple")
+text(x = which.min(sinCurve),y = min(sinCurve),labels = paste0("min rate ",round(min(sinCurve),5)),pos = 3, col = "purple")
 
 inflexPts = rle(sign(diff(diff(sinCurve))))$lengths
 for(i in 2:length(inflexPts)){
@@ -63,6 +63,8 @@ gammaMosquito <- function(N=5,alpha=1,off=0){
 
              # choose next event
              # pDie = pgamma(q = tDur,shape = N,rate = g*N)
+             # pexp(q = tDur, rate = -log(1-g)) # if i was exponentially distributed...
+             # pgamma(q = tDur, shape = N, rate = (-log(1-g))*N) # ... but i'm a gamma
              pDie = g*tDur
              if(runif(1) < pDie){
                states[[i]] = "D"
@@ -85,6 +87,8 @@ gammaMosquito <- function(N=5,alpha=1,off=0){
 
              # choose next event
              # pDie = pgamma(q = tDur,shape = N,rate = g*N)
+             # pexp(1 = tDur, rate = -log(1-g)) # if i was exponentially distributed...
+             # pgamma(q = tDur, shape = N, rate = (-log(1-g))*N) # ... but i'm a gamma
              pDie = g*tDur
              if(runif(1) < pDie){
                states[[i]] = "D"
@@ -107,6 +111,8 @@ gammaMosquito <- function(N=5,alpha=1,off=0){
 
              # choose next event
              # pDie = pgamma(q = tDur,shape = N,rate = g*N)
+             # pexp(1 = tDur, rate = -log(1-g)) # if i was exponentially distributed...
+             # pgamma(q = tDur, shape = N, rate = (-log(1-g))*N) # ... but i'm a gamma
              pDie = g*tDur
              if(runif(1) < pDie){
                states[[i]] = "D"
