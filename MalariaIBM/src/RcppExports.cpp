@@ -6,6 +6,15 @@
 
 using namespace Rcpp;
 
+// DEBUG_OPENMP
+void DEBUG_OPENMP();
+RcppExport SEXP _MalariaIBM_DEBUG_OPENMP() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    DEBUG_OPENMP();
+    return R_NilValue;
+END_RCPP
+}
 // rcpp_hello_world
 List rcpp_hello_world();
 RcppExport SEXP _MalariaIBM_rcpp_hello_world() {
@@ -61,6 +70,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_MalariaIBM_DEBUG_OPENMP", (DL_FUNC) &_MalariaIBM_DEBUG_OPENMP, 0},
     {"_MalariaIBM_rcpp_hello_world", (DL_FUNC) &_MalariaIBM_rcpp_hello_world, 0},
     {"_MalariaIBM_test__ctor", (DL_FUNC) &_MalariaIBM_test__ctor, 1},
     {"_MalariaIBM_test__get_N", (DL_FUNC) &_MalariaIBM_test__get_N, 1},
