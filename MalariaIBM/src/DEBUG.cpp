@@ -10,6 +10,7 @@
 */
 
 #include <Rcpp.h>
+#include <MalariaIBM/test.h>
 
 // [[Rcpp::plugins(openmp)]]
 
@@ -43,4 +44,48 @@ void DEBUG_OPENMP(){
 
     std::cout << "  Normal end of execution." << std::endl;
     std::cout << "  Elapsed wall clock time = " << wtime << std::endl;
+};
+
+
+//' debug openmp with classes
+//'
+//' get the bugs out!
+//'
+//' @export
+// [[Rcpp::export]]
+void DEBUG_CLASS_OPENMP(const int &N){
+  std::vector<MalariaIBM::test> tests;
+  for(size_t i=0; i<N; i++){
+    tests.push_back(MalariaIBM::test((int)(i)));
+  }
+
+  int id;
+  size_t i;
+  #pragma omp parallel for private(i,id)
+  for(i=0; i<N; i++){
+    std::cout << "running on thread: " << omp_get_thread_num() << std::endl;
+    tests[i].get_memLoc();
+  }
+
+};
+
+//' debug openmp with classes
+//'
+//' get the bugs out!
+//' check speed in serial
+//'
+//' @export
+// [[Rcpp::export]]
+void DEBUG_CLASS_SERIAL(const int &N){
+  std::vector<MalariaIBM::test> tests;
+  for(size_t i=0; i<N; i++){
+    tests.push_back(MalariaIBM::test((int)(i)));
+  }
+
+  size_t i;
+  for(i=0; i<N; i++){
+    std::cout << "i: " << i << std::endl;
+    tests[i].get_memLoc();
+  }
+
 };

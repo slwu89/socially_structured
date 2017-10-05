@@ -15,6 +15,26 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// DEBUG_CLASS_OPENMP
+void DEBUG_CLASS_OPENMP(const int& N);
+RcppExport SEXP _MalariaIBM_DEBUG_CLASS_OPENMP(SEXP NSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const int& >::type N(NSEXP);
+    DEBUG_CLASS_OPENMP(N);
+    return R_NilValue;
+END_RCPP
+}
+// DEBUG_CLASS_SERIAL
+void DEBUG_CLASS_SERIAL(const int& N);
+RcppExport SEXP _MalariaIBM_DEBUG_CLASS_SERIAL(SEXP NSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const int& >::type N(NSEXP);
+    DEBUG_CLASS_SERIAL(N);
+    return R_NilValue;
+END_RCPP
+}
 // rcpp_hello_world
 List rcpp_hello_world();
 RcppExport SEXP _MalariaIBM_rcpp_hello_world() {
@@ -71,6 +91,8 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_MalariaIBM_DEBUG_OPENMP", (DL_FUNC) &_MalariaIBM_DEBUG_OPENMP, 0},
+    {"_MalariaIBM_DEBUG_CLASS_OPENMP", (DL_FUNC) &_MalariaIBM_DEBUG_CLASS_OPENMP, 1},
+    {"_MalariaIBM_DEBUG_CLASS_SERIAL", (DL_FUNC) &_MalariaIBM_DEBUG_CLASS_SERIAL, 1},
     {"_MalariaIBM_rcpp_hello_world", (DL_FUNC) &_MalariaIBM_rcpp_hello_world, 0},
     {"_MalariaIBM_test__ctor", (DL_FUNC) &_MalariaIBM_test__ctor, 1},
     {"_MalariaIBM_test__get_N", (DL_FUNC) &_MalariaIBM_test__get_N, 1},

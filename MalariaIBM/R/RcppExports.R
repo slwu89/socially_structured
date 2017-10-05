@@ -10,6 +10,25 @@ DEBUG_OPENMP <- function() {
     invisible(.Call('_MalariaIBM_DEBUG_OPENMP', PACKAGE = 'MalariaIBM'))
 }
 
+#' debug openmp with classes
+#'
+#' get the bugs out!
+#'
+#' @export
+DEBUG_CLASS_OPENMP <- function(N) {
+    invisible(.Call('_MalariaIBM_DEBUG_CLASS_OPENMP', PACKAGE = 'MalariaIBM', N))
+}
+
+#' debug openmp with classes
+#'
+#' get the bugs out!
+#' check speed in serial
+#'
+#' @export
+DEBUG_CLASS_SERIAL <- function(N) {
+    invisible(.Call('_MalariaIBM_DEBUG_CLASS_SERIAL', PACKAGE = 'MalariaIBM', N))
+}
+
 #' @export
 rcpp_hello_world <- function() {
     .Call('_MalariaIBM_rcpp_hello_world', PACKAGE = 'MalariaIBM')
