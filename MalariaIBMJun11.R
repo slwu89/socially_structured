@@ -92,7 +92,7 @@ malaria_ibm <- function(theta, numIter) {
 	numHousesPerBreedingSite <- theta[["numHousesPerBreedingSite"]] # Number of houses per breeding site
 	numBreedingSites <- round(numHouses/numHousesPerBreedingSite) # Number of breeding sites
 
-	# Use a multi-level list where elements represent individuals and 
+	# Use a multi-level list where elements represent individuals and
 	# sub-levels contain attribute information about the individuals:
 	indiv <- vector(mode = "list", N)
 
@@ -125,7 +125,7 @@ malaria_ibm <- function(theta, numIter) {
 			latHouse[j] <- runif(1)
 			distOtherJHouses <- rep(0, j-1)
 			for (k in 1:(j-1)) {
-				distOtherJHouses[k] <- sqrt((longHouse[j]-longHouse[k])^2 
+				distOtherJHouses[k] <- sqrt((longHouse[j]-longHouse[k])^2
 								  + (latHouse[j]-latHouse[k])^2)
 			}
 		}
@@ -193,7 +193,7 @@ malaria_ibm <- function(theta, numIter) {
 	for (j in 1:numHouses) {
 		for (k in 1:numBreedingSites) {
 			psiHouse[j] <- ( psiHouse[j] + (1/(sigmaBreedingSite[k]*sqrt(2*pi)))
-					     * exp(-((longHouse[j]-longBreedingSite[k])^2 + 
+					     * exp(-((longHouse[j]-longBreedingSite[k])^2 +
                                    (latHouse[j]-latBreedingSite[k])^2)
                                    / (2*sigmaBreedingSite[k]^2)))
 		}
@@ -264,8 +264,8 @@ malaria_ibm <- function(theta, numIter) {
 	# phiVector <- sapply(indiv, function(x) x$phi)
 	# hist(phiVector)
 
-	# q (the probability that an asymptomatic infection is detected by 
-	# microscopy) is also calculated for each individual, as well as the 
+	# q (the probability that an asymptomatic infection is detected by
+	# microscopy) is also calculated for each individual, as well as the
 	# probability of detection by PCR for asymptomatic infections in states
 	# A (patent) and U (subpatent). This also varies according to immune
 	# status:
@@ -437,7 +437,7 @@ malaria_ibm <- function(theta, numIter) {
 		slidPosAll[i] <- slidPos0_5[i] + slidPos5_10[i] + slidPos10_15[i] + slidPos15Plus[i]
 
 		# Determine which individuals die during the current time step:
-		for (j in 1:N) {	
+		for (j in 1:N) {
 			randNum <- runif(1)
 			if(randNum <= mu) {
 				indiv[[j]]$alive <- 0
@@ -456,7 +456,7 @@ malaria_ibm <- function(theta, numIter) {
 				randNum <- runif(1)
 
 				## Latent infection (S -> E):
-				# If the random number is less than lambda, that individual 
+				# If the random number is less than lambda, that individual
 				# develops a latent infection (E) in the next time step.
 				if (randNum <= lambda) {
 					indiv[[j]]$state <- "E"
@@ -479,7 +479,7 @@ malaria_ibm <- function(theta, numIter) {
 					randNum <- runif(1)
 
 					## Treated clinical infection (E -> T):
-					# If the random number is less than phi*fT, that 
+					# If the random number is less than phi*fT, that
 					# individual develops a treated clinical infection (T)
 					# in the next time step.
 					if (randNum <= phi*fT) {
@@ -499,7 +499,7 @@ malaria_ibm <- function(theta, numIter) {
 							clinInc10_15[i] <- clinInc10_15[i] + 1
 						} else if (indiv[[j]]$age >= 15) {
 							clinInc15Plus[i] <- clinInc15Plus[i] + 1
-						} 
+						}
 					}
 
 					## Untreated clinical infection (E -> D):
@@ -523,7 +523,7 @@ malaria_ibm <- function(theta, numIter) {
 							clinInc10_15[i] <- clinInc10_15[i] + 1
 						} else if (indiv[[j]]$age >= 15) {
 							clinInc15Plus[i] <- clinInc15Plus[i] + 1
-						} 
+						}
 					}
 
 					## Asymptomatic infection (E -> A):
@@ -578,9 +578,9 @@ malaria_ibm <- function(theta, numIter) {
 				# Draw a random number between 1 and 0 for each susceptible
 				# individual.
 				randNum <- runif(1)
-			
+
 				## Treated clinical infection (A -> T):
-				# If the random number is less than phi*fT*lambda, that 
+				# If the random number is less than phi*fT*lambda, that
 				# individual develops a treated clinical infection (T) in
 				# the next time step.
 				if (randNum <= phi*fT*lambda) {
@@ -622,7 +622,7 @@ malaria_ibm <- function(theta, numIter) {
 						clinInc10_15[i] <- clinInc10_15[i] + 1
 					} else if (indiv[[j]]$age >= 15) {
 						clinInc15Plus[i] <- clinInc15Plus[i] + 1
-					} 
+					}
 				}
 
 				## Progression to asymptomatic sub-patent infection (A -> U):
@@ -645,14 +645,14 @@ malaria_ibm <- function(theta, numIter) {
 				# Draw a random number between 1 and 0 for each susceptible
 				# individual.
 				randNum <- runif(1)
-			
+
 				## Treated clinical infection (U -> T):
-				# If the random number is less than phi*fT*lambda, that 
+				# If the random number is less than phi*fT*lambda, that
 				# individual develops a treated clinical infection (T) in
 				# the next time step.
 				if (randNum <= phi*fT*lambda) {
 					indiv[[j]]$state <- "T"
-					
+
 					# Keep track of clinical incidence in different age groups:
 					clinIncAll[i] <- clinIncAll[i] + 1
 					if ((indiv[[j]]$age >= 2) & (indiv[[j]]$age < 10)) {
@@ -666,7 +666,7 @@ malaria_ibm <- function(theta, numIter) {
 						clinInc10_15[i] <- clinInc10_15[i] + 1
 					} else if (indiv[[j]]$age >= 15) {
 						clinInc15Plus[i] <- clinInc15Plus[i] + 1
-					} 
+					}
 				}
 
 				## Untreated clinical infection (U -> D):
@@ -689,7 +689,7 @@ malaria_ibm <- function(theta, numIter) {
 						clinInc10_15[i] <- clinInc10_15[i] + 1
 					} else if (indiv[[j]]$age >= 15) {
 						clinInc15Plus[i] <- clinInc15Plus[i] + 1
-					} 
+					}
 				}
 
 				## Asymptomatic infection (U -> A):
@@ -779,8 +779,8 @@ malaria_ibm <- function(theta, numIter) {
 			}
 		}
 
-		# q (the probability that an asymptomatic infection is detected by 
-		# microscopy) is also calculated for each individual, as well as the 
+		# q (the probability that an asymptomatic infection is detected by
+		# microscopy) is also calculated for each individual, as well as the
 		# probability of detection by PCR for asymptomatic infections in states
 		# A (patent) and U (subpatent). This also varies according to immune
 		# status:
@@ -811,7 +811,7 @@ malaria_ibm <- function(theta, numIter) {
 				bitingHet <- rlnorm(n = 1, meanlog = -sigma2/2, sdlog = sqrt(sigma2))
 				epsilon <- epsilon0*bitingHet*(1-rho)*psi
 				phi <- phi0 * (phi1 + ((1 - phi1)/(1 + (PM*meanICA18_22/IC0)^kappaC)))
-				indiv[[N+j]] <- list(state="S", age=0, alive=1, bitingHet=bitingHet, 
+				indiv[[N+j]] <- list(state="S", age=0, alive=1, bitingHet=bitingHet,
 							IB=0, ICA=0, ICM=PM*meanICA18_22, ID=0, daysLatent=0,
 							epsilon=epsilon, lambda=epsilon*b0, phi=phi,
 							house=house,
@@ -844,7 +844,7 @@ malaria_ibm <- function(theta, numIter) {
 					for (l in 1:numBreedingSites) {
 						# Compute cumulative risk due to all of the breeding sites:
 						riskMap[j,k] <- ( riskMap[j,k] + (1/(sigmaBreedingSite[l]*sqrt(2*pi)))
-								    * exp(-((longMap-longBreedingSite[l])^2 + 
+								    * exp(-((longMap-longBreedingSite[l])^2 +
 		            	                       (latMap-latBreedingSite[l])^2)
 		                  	                / (2*sigmaBreedingSite[l]^2)))
 					}
@@ -853,14 +853,14 @@ malaria_ibm <- function(theta, numIter) {
 			numContours <- 9
 			contour(x = seq(0, 1, length.out = nrow(riskMap)),
 				  y = seq(0, 1, length.out = ncol(riskMap)),
-				  z= riskMap, drawlabels=FALSE, nlevels=numContours, lwd=2, 
+				  z= riskMap, drawlabels=FALSE, nlevels=numContours, lwd=2,
 				  col=brewer.pal(numContours, "Blues"), axes=FALSE)
 
 			# 2. Plot breeding sites
 			# for (j in 1:numBreedingSites) {
 			#	points(longBreedingSite[j], latBreedingSite[j], col="red", lwd=3)
 			# }
-	
+
 			# 3. Plot houses
 			houseEdgeSize <- 0.015
 			for (j in 1:numHouses) {
@@ -897,7 +897,7 @@ malaria_ibm <- function(theta, numIter) {
 	}
 
 	## Return the simulation results as a data frame:
-	simResults <- data.frame(time, numS, numE, numT, numD, numA, numU, numP, 
+	simResults <- data.frame(time, numS, numE, numT, numD, numA, numU, numP,
 	  clinIncAll, clinInc2_10, clinInc0_5, clinInc5_10, clinInc10_15, clinInc15Plus,
 	  slidPosAll, slidPos2_10, slidPos0_5, slidPos5_10, slidPos10_15, slidPos15Plus,
 	  NAll, N2_10, N0_5, N5_10, N10_15, N15Plus)
@@ -908,7 +908,7 @@ malaria_ibm <- function(theta, numIter) {
 ## Functions for calculating levels of immunity when the simulation starts: ##
 ##############################################################################
 
-## Differential equations for: 
+## Differential equations for:
 ## 1. Pre-erythrocytic immunity (IB, reduces the probability of infection
 ##    following an infectious challenge).
 ## 2. Detection immunity (ID, a.k.a. blood-stage immunity, reduces the
@@ -954,14 +954,14 @@ I_ode <- function(time, state, theta) {
 ## given EIR heterogeneities (biting rate & geographic location):
 initialI <- function(a, zita, psi, theta) {
 	initState <- c(IB=0, ID=0, ICA=0)
-	thetaI <- c(a0=theta[["a0"]], rho=theta[["rho"]], dB=theta[["dB"]], 
-		     uB=theta[["uB"]], epsilon0=theta[["epsilon0"]], 
+	thetaI <- c(a0=theta[["a0"]], rho=theta[["rho"]], dB=theta[["dB"]],
+		     uB=theta[["uB"]], epsilon0=theta[["epsilon0"]],
 		     dID=theta[["dID"]], uD=theta[["uD"]], dC=theta[["dC"]],
 		     uC=theta[["uC"]], b0=theta[["b0"]], b1=theta[["b1"]],
 		     IB0=theta[["IB0"]], kappaB=theta[["kappaB"]], psi=psi, zita=zita)
-	IvsAge <- data.frame(ode(y=initState, times=seq(0, a, by=a/1000), func=I_ode, 
+	IvsAge <- data.frame(ode(y=initState, times=seq(0, a, by=a/1000), func=I_ode,
                          parms=thetaI, method="ode45"))
-	c(IB=IvsAge$IB[length(IvsAge$IB)], ID=IvsAge$ID[length(IvsAge$ID)], 
+	c(IB=IvsAge$IB[length(IvsAge$IB)], ID=IvsAge$ID[length(IvsAge$ID)],
          ICA=IvsAge$ICA[length(IvsAge$ICA)])
 }
 
@@ -1148,10 +1148,10 @@ sim1 <- malaria_ibm(theta=theta, numIter=numIter) # Runs the simulation
 ## Plot number of individuals in each state over time:  ##
 ##########################################################
 ggplot(sim1, aes(x = time, y = sim1, color = State)) +
-	geom_line(aes(y = numS, col = "S"), size = 1.2) + 
+	geom_line(aes(y = numS, col = "S"), size = 1.2) +
 	geom_line(aes(y = numE, col = "E"), size = 1.2) +
 	geom_line(aes(y = numT, col = "T"), size = 1.2) +
-	geom_line(aes(y = numD, col = "D"), size = 1.2) + 
+	geom_line(aes(y = numD, col = "D"), size = 1.2) +
 	geom_line(aes(y = numA, col = "A"), size = 1.2) +
 	geom_line(aes(y = numU, col = "U"), size = 1.2) +
 	geom_line(aes(y = numP, col = "P"), size = 1.2) +
@@ -1159,10 +1159,10 @@ ggplot(sim1, aes(x = time, y = sim1, color = State)) +
 
 ## Plot clinical incidence by age group over time:
 ggplot(sim1, aes(x = time, y = sim1, color = "Age group")) +
-	geom_line(aes(y = clinIncAll/NAll, col = "All"), size = 1.2) + 
+	geom_line(aes(y = clinIncAll/NAll, col = "All"), size = 1.2) +
 	geom_line(aes(y = clinInc2_10/N2_10, col = "2-10"), size = 1.2) +
 	geom_line(aes(y = clinInc0_5/N0_5, col = "0-5"), size = 1.2) +
-	geom_line(aes(y = clinInc5_10/N5_10, col = "5-10"), size = 1.2) + 
+	geom_line(aes(y = clinInc5_10/N5_10, col = "5-10"), size = 1.2) +
 	geom_line(aes(y = clinInc10_15/N10_15, col = "10-15"), size = 1.2) +
 	geom_line(aes(y = clinInc15Plus/N15Plus, col = "15+"), size = 1.2) +
 	labs(x = "Time (days)", y = "Clinical incidence")
@@ -1179,10 +1179,10 @@ ggplot(sim1, aes(x = time, y = sim1, color = "Age group")) +
 
 ## Plot population size by age group over time:
 ggplot(sim1, aes(x = time, y = sim1, color = "Age group")) +
-	geom_line(aes(y = NAll, col = "All"), size = 1.2) + 
+	geom_line(aes(y = NAll, col = "All"), size = 1.2) +
 	geom_line(aes(y = N2_10, col = "2-10"), size = 1.2) +
 	geom_line(aes(y = N0_5, col = "0-5"), size = 1.2) +
-	geom_line(aes(y = N5_10, col = "5-10"), size = 1.2) + 
+	geom_line(aes(y = N5_10, col = "5-10"), size = 1.2) +
 	geom_line(aes(y = N10_15, col = "10-15"), size = 1.2) +
 	geom_line(aes(y = N15Plus, col = "15+"), size = 1.2) +
 	labs(x = "Time (days)", y = "Number of individuals")

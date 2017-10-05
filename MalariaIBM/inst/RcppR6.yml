@@ -1,0 +1,3 @@
+# YAML file telling the package where to look for YAML files for each class header
+classes:
+  - inst/TEST.yml

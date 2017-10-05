@@ -1,0 +1,29 @@
+# test class
+
+test:
+  name_cpp: MalariaIBM::test
+  forward_declare: true
+  constructor:
+    roxygen: |
+      i'm a test
+      @title test class
+      @section Methods:
+        * i'm a method: write me!
+      @section Fields:
+        * i'm a field: write me!
+      @export
+    # constructor
+    args:
+      - N_new: int
+  methods:
+
+    get_N:
+      return_type: int
+
+    set_N:
+      args:
+        - N_new: int
+      return_type: void
+
+    get_memLoc:
+      return_type: void
