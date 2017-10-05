@@ -5,11 +5,11 @@ namespace MalariaIBM {
 
   human::human(const int &id_new){
     id = id_new;
-    std::cout << "i'm an object of class human being born at memory location: " << this << std::endl;
+    std::cout << "human " << id << " being born at memory location: " << this << std::endl;
   };
 
   human::~human(){
-    std::cout << "i'm an object of class human getting killed at memory location: " << this << std::endl;
+    std::cout << "human " << id << " getting killed at memory location: " << this << std::endl;
   };
 
   int human::get_id(){
@@ -25,7 +25,7 @@ namespace MalariaIBM {
   };
 
   void human::get_memLoc(){
-    std::cout << "i'm an object of class human at memory location: " << this << std::endl;
+    std::cout << "human " << id << " at memory location: " << this << std::endl;
   };
 
 }

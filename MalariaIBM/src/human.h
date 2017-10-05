@@ -16,7 +16,6 @@
 namespace MalariaIBM {
 
 class human {
-// public members
 public:
                               human(const int &id_new);
                               ~human();
@@ -27,9 +26,7 @@ public:
 
   void                        get_memLoc();
 
-// private members
 private:
-
   int                         id;
   std::string                 state;      // life state
 

@@ -29,11 +29,6 @@ DEBUG_CLASS_SERIAL <- function(N) {
     invisible(.Call('_MalariaIBM_DEBUG_CLASS_SERIAL', PACKAGE = 'MalariaIBM', N))
 }
 
-#' @export
-rcpp_hello_world <- function() {
-    .Call('_MalariaIBM_rcpp_hello_world', PACKAGE = 'MalariaIBM')
-}
-
 test__ctor <- function(N_new) {
     .Call('_MalariaIBM_test__ctor', PACKAGE = 'MalariaIBM', N_new)
 }
@@ -57,5 +52,10 @@ test__get_memLoc <- function(obj_) {
 #' @export
 TEST_HOUSE <- function(nPeople) {
     invisible(.Call('_MalariaIBM_TEST_HOUSE', PACKAGE = 'MalariaIBM', nPeople))
+}
+
+#' @export
+rcpp_hello_world <- function() {
+    .Call('_MalariaIBM_rcpp_hello_world', PACKAGE = 'MalariaIBM')
 }
 

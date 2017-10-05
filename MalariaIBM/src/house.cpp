@@ -26,6 +26,17 @@ namespace MalariaIBM {
     humans.insert(h);
   };
 
+  human* house::get_human(const int &h_id){
+    auto h_out = std::find_if(humans.begin(), humans.end(), [&h_id](human* h){
+      return(h->get_id()==h_id);
+    });
+    if(h_out!=humans.end()){
+      return(h_out);
+    } else {
+      return(nullptr);
+    }
+  };
+
   void house::get_memLoc(){
     std::cout << "i'm an object of class house at memory location: " << this << std::endl;
   };

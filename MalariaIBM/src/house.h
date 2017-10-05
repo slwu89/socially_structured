@@ -11,6 +11,7 @@
 #define _MALARIAIBM_HOUSE_H_
 
 #include <set>
+#include <algorithm>
 #include <iostream>
 #include <Rcpp.h>
 #include "human.h"
@@ -27,6 +28,7 @@ public:
   int                         get_block_id();
 
   void                        add_human(human* h);
+  human*                      get_human(const int &h_id);
 
   void                        get_memLoc();
 
