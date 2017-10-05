@@ -50,3 +50,12 @@ test__get_memLoc <- function(obj_) {
     invisible(.Call('_MalariaIBM_test__get_memLoc', PACKAGE = 'MalariaIBM', obj_))
 }
 
+#' make a house
+#'
+#' get the bugs out! get the people in!
+#'
+#' @export
+TEST_HOUSE <- function(nPeople) {
+    invisible(.Call('_MalariaIBM_TEST_HOUSE', PACKAGE = 'MalariaIBM', nPeople))
+}
+

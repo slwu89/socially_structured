@@ -88,6 +88,16 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// TEST_HOUSE
+void TEST_HOUSE(int nPeople);
+RcppExport SEXP _MalariaIBM_TEST_HOUSE(SEXP nPeopleSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type nPeople(nPeopleSEXP);
+    TEST_HOUSE(nPeople);
+    return R_NilValue;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_MalariaIBM_DEBUG_OPENMP", (DL_FUNC) &_MalariaIBM_DEBUG_OPENMP, 0},
@@ -98,6 +108,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_MalariaIBM_test__get_N", (DL_FUNC) &_MalariaIBM_test__get_N, 1},
     {"_MalariaIBM_test__set_N", (DL_FUNC) &_MalariaIBM_test__set_N, 2},
     {"_MalariaIBM_test__get_memLoc", (DL_FUNC) &_MalariaIBM_test__get_memLoc, 1},
+    {"_MalariaIBM_TEST_HOUSE", (DL_FUNC) &_MalariaIBM_TEST_HOUSE, 1},
     {NULL, NULL, 0}
 };
 
